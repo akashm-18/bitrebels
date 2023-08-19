@@ -7,7 +7,7 @@ export default function Header() {
    return (
       <div>
          <header className="flex justify-between p-4">
-            <Link to="/" className="flex items-center gap-1">
+            <Link to="/" className="flex items-center gap-2">
                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

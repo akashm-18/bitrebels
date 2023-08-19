@@ -19,7 +19,7 @@ export default function Features({ selected, onchange }) {
                />
             </svg>
 
-            <span>Wifi</span>
+            <span>Wifi Availablity</span>
          </label>
          <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer ">
             <input type="checkbox" />
