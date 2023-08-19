@@ -105,7 +105,7 @@ export default function Events() {
                         Upload
                      </button>
                   </div>
-                  <h2 className="text-2xl mt-4">Description</h2>
+                  <h2 className="text-2xl mt-4">Description Need</h2>
                   <textarea
                      value={description}
                      onChange={(e) => setDescription(e.target.value)}
