@@ -4,9 +4,12 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 const download = require('image-downloader')
+const multer = require('multer')
+const fs = require('fs')
 
 const mongoose = require('mongoose')
 const User = require('./models/User.js')
+const Event = require('./models/Events.js')
 
 require('dotenv').config()
 
@@ -17,6 +20,7 @@ const secrettoken = 'eogibrugnr5gbeufhijnbuhj';
 
 app.use(express.json())
 app.use(cookieParser())
+app.use('/uploads' , express.static(__dirname + '/uploads'))
 app.use(cors(
     {
         credentials:true,
@@ -86,17 +90,80 @@ app.post('/logout' , (req,res) => {
     res.cookie('token' , '').json(true)
 })
     
-
-app.post('/upload-by-link' ,async (req,res) => {
-    const {link} = req.body;
-    const newName ='photo' +  Date.now() + '.jpg';
+app.post('/upload-by-link', async (req, res) => {
+    const { link } = req.body;
+    const newName = 'photo' + Date.now() + '.jpg';
     await download.image({
-        url: link , 
-        dest: __dirname + '/uploads/' + newName,
-    })
-    res.json(newName)
+      url: encodeURIComponent(link),
+      dest: __dirname + '/uploads/' + newName,
+    });
+    res.json(newName);
+  });
+
+const PhotosMiddleware = multer({dest:'uploads'})
+
+app.post('/upload', PhotosMiddleware.array('photos',100) , (req ,res) => {
+    const uploadedFiles = [];
+    for (let i =0;i<req.files.length;i++) {
+        const {path , originalname} = req.files[i];
+        const parts = originalname.split('.');
+        const ext = parts[parts.length - 1]
+        const newPath = path + '.' + ext;
+        fs.renameSync(path,newPath);
+        uploadedFiles.push(newPath.replace('uploads\\',''));
+    }
+res.json(uploadedFiles)
 })
 
 
+app.post('/myevents', (req,res) => {
+    const {token} = req.cookies;
+    const {
+      title,address,addedPhotos,description,
+      features,extraInfo,startDate,endDate,maxMembers
+    } = req.body;
+    jwt.verify(token, secrettoken, {}, async (err, userData) => {
+      if (err) throw err;
+      const placeDoc = await Event.create({
+        owner:userData.id,
+        title,address,photos:addedPhotos,description,
+        features,extraInfo,startDate , endDate,maxMembers,
+      });
+      res.json(placeDoc);
+    });
+  });
+
+
+  app.get('/myevents' , (req,res) => {
+    const {token} = req.cookies;
+    jwt.verify(token, secrettoken, {}, async (err, userData) => {
+        const {id} = userData;
+        res.json(await Event.find({owner:id}))
+    })
+  })
+
+
+  app.get('/myevents/:id' ,async (req,res) => {
+    const {id} = req.params
+    res.json(await Event.findById(id))
+})
+
+
+app.put('/myevents' , (req,res) => {
+    const {token} = req.cookies;
+    const {
+     id, title,address,addedPhotos,description,
+      features,extraInfo,startDate,endDate,maxMembers
+    } = req.body;
+    jwt.verify(token, secrettoken, {}, async (err, userData) => {
+        const EventDoc = await Event.findById(id);
+        if (userData.id === EventDoc.owner.toString() ){
+            EventDoc.set({title,address,photos:addedPhotos,description,
+                features,extraInfo,startDate , endDate,maxMembers})
+               await EventDoc.save()
+                res.json('ok')
+        }
+    })
+})
 
 app.listen(4000)

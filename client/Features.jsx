@@ -1,10 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function Features({ selected, onchange }) {
+export default function Features({ selected, onChange }) {
+   const [wifi, setWifi] = useState(false);
+   const [parking, setParking] = useState(false);
+   const [lunch, setLunch] = useState(false);
+
+   function handleClick(e) {
+      const { checked, name } = e.target;
+      if (checked) {
+         onChange([...selected, name]);
+      } else {
+         onChange([
+            ...selected.filter((selectedName) => selectedName !== name),
+         ]);
+      }
+   }
+
    return (
       <div className="my-4">
          <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-            <input type="checkbox" />
+            <input
+               name="wifi"
+               type="checkbox"
+               checked={selected.includes("wifi")}
+               onChange={handleClick}
+            />
             <svg
                xmlns="http://www.w3.org/2000/svg"
                fill="none"
@@ -19,10 +39,15 @@ export default function Features({ selected, onchange }) {
                />
             </svg>
 
-            <span>Wifi Availablity</span>
+            <span>Wifi</span>
          </label>
          <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer ">
-            <input type="checkbox" />
+            <input
+               name="parking"
+               type="checkbox"
+               checked={selected.includes("parking")}
+               onChange={handleClick}
+            />
             <svg
                xmlns="http://www.w3.org/2000/svg"
                fill="none"
@@ -40,7 +65,12 @@ export default function Features({ selected, onchange }) {
             <span>Free Parking</span>
          </label>
          <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer ">
-            <input type="checkbox" />
+            <input
+               name="lunch"
+               type="checkbox"
+               checked={selected.includes("lunch")}
+               onChange={handleClick}
+            />
             <svg
                xmlns="http://www.w3.org/2000/svg"
                fill="none"

@@ -13,6 +13,6 @@ const EventSchema = new mongoose.Schema({
     maxMembers : Number
 })
 
-const PlaceModel = mongoose.model('Place' , EventSchema);
+const PlaceModel = mongoose.model('Event' , EventSchema);
 
 module.exports = PlaceModel;
