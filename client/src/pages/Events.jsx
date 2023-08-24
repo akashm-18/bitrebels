@@ -14,6 +14,7 @@ export default function Events() {
    return (
       <div>
          <AccountNav />
+
          <div className="text-center py-8">
             <Link
                className="bg-primary py-2 px-4 rounded-full mt-3 text-white inline-flex"
@@ -54,7 +55,8 @@ export default function Events() {
                      </div>
                      <div className="grow-0 shrink">
                         <h2 className="text-xl font-bold"> {event.title}</h2>
-                        <p className="text-sm mt-2"> {event.description} </p>
+                        <p className="text-sm mt-2"> {event.address} </p>
+                        <p>Team Size : {event.maxMembers} </p>
                      </div>
                   </Link>
                ))}

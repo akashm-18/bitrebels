@@ -5,7 +5,7 @@ import Footer from "./pages/FooterPage";
 
 export default function Layout() {
    return (
-      <div className="flex flex-col">
+      <div className="py-4 px-8 flex flex-col min-h-screen">
          <Header />
          <Outlet />
          {/* <Footer /> */}

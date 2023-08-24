@@ -8,8 +8,10 @@ const multer = require('multer')
 const fs = require('fs')
 
 const mongoose = require('mongoose')
+
 const User = require('./models/User.js')
 const Event = require('./models/Events.js')
+const RegisterEvent = require('./models/RegisterEvent.js')
 
 require('dotenv').config()
 
@@ -120,23 +122,27 @@ app.post('/myevents', (req,res) => {
     const {token} = req.cookies;
     const {
       title,address,addedPhotos,description,
-      features,extraInfo,startDate,endDate,maxMembers
+      features,extraInfo,startDate,endDate,year ,maxMembers , price
     } = req.body;
     jwt.verify(token, secrettoken, {}, async (err, userData) => {
       if (err) throw err;
       const placeDoc = await Event.create({
         owner:userData.id,
         title,address,photos:addedPhotos,description,
-        features,extraInfo,startDate , endDate,maxMembers,
+        features,extraInfo,startDate , endDate, year ,maxMembers,price
       });
       res.json(placeDoc);
     });
   });
 
 
+  
+
+
   app.get('/myevents' , (req,res) => {
     const {token} = req.cookies;
     jwt.verify(token, secrettoken, {}, async (err, userData) => {
+        if (err) throw err
         const {id} = userData;
         res.json(await Event.find({owner:id}))
     })
@@ -148,22 +154,64 @@ app.post('/myevents', (req,res) => {
     res.json(await Event.findById(id))
 })
 
+app.get('/event/:id' ,async (req,res) => {
+    const {id} = req.params
+    res.json(await Event.findById(id))
+})
+
 
 app.put('/myevents' , (req,res) => {
     const {token} = req.cookies;
     const {
      id, title,address,addedPhotos,description,
-      features,extraInfo,startDate,endDate,maxMembers
+      features,extraInfo,startDate,endDate,year , maxMembers,price
     } = req.body;
     jwt.verify(token, secrettoken, {}, async (err, userData) => {
         const EventDoc = await Event.findById(id);
         if (userData.id === EventDoc.owner.toString() ){
             EventDoc.set({title,address,photos:addedPhotos,description,
-                features,extraInfo,startDate , endDate,maxMembers})
+                features,extraInfo,startDate , endDate, year , maxMembers , price})
                await EventDoc.save()
                 res.json('ok')
         }
     })
 })
+
+
+app.get('/allevents' , async (req,res) => {
+    res.json(await Event.find())
+})
+
+
+app.post('/registerevent' ,async (req,res) => {
+    const userData = await getUserDataFromToken(req);
+    const {event , date , month , year , name , phone , price } = req.body
+    RegisterEvent.create({
+        event , date , month , year , name , phone , price , 
+        user : userData.id
+    }).then((doc) => {
+        res.json(doc)
+    }).catch((err) => {
+        throw err
+    })
+})
+
+
+function getUserDataFromToken(req) {
+    return new Promise((resolve,reject) => {
+        jwt.verify(req.cookies.token, secrettoken, {}, async (err, userData) => {
+            if (err) throw err;
+            resolve(userData)
+        })
+    })
+}
+
+
+app.get('/registerevent' , async (req,res) => {
+    const userData = await getUserDataFromToken(req);
+    res.json(await RegisterEvent.find({user:userData.id}).populate('event'))
+})
+
+
 
 app.listen(4000)

@@ -1,139 +1,41 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-const Tile = ({ title, description, icon }) => {
-   return (
-      <div className="bg-white shadow-lg rounded-lg p-6">
-         <div className="text-2xl text-gray-700 mb-4">{icon}</div>
-         <h3 className="text-xl font-semibold mb-2">{title}</h3>
-         <p className="text-gray-600">{description}</p>
-      </div>
-   );
-};
-
-const TilesSection = () => {
-   const tilesData = [
-      {
-         title: "Tile 1",
-         description: "This is the description for Tile 1.",
-         icon: <i className="fas fa-cog"></i>,
-      },
-      {
-         title: "Tile 2",
-         description: "This is the description for Tile 2.",
-         icon: <i className="fas fa-chart-bar"></i>,
-      },
-      {
-         title: "Tile 3",
-         description: "This is the description for Tile 3.",
-         icon: <i className="fas fa-user"></i>,
-      },
-      {
-         title: "Tile 1",
-         description: "This is the description for Tile 1.",
-         icon: <i className="fas fa-cog"></i>,
-      },
-      {
-         title: "Tile 2",
-         description: "This is the description for Tile 2.",
-         icon: <i className="fas fa-chart-bar"></i>,
-      },
-      {
-         title: "Tile 3",
-         description: "This is the description for Tile 3.",
-         icon: <i className="fas fa-user"></i>,
-      },
-      {
-         title: "Tile 1",
-         description: "This is the description for Tile 1.",
-         icon: <i className="fas fa-cog"></i>,
-      },
-      {
-         title: "Tile 2",
-         description: "This is the description for Tile 2.",
-         icon: <i className="fas fa-chart-bar"></i>,
-      },
-      {
-         title: "Tile 3",
-         description: "This is the description for Tile 3.",
-         icon: <i className="fas fa-user"></i>,
-      },
-      {
-         title: "Tile 1",
-         description: "This is the description for Tile 1.",
-         icon: <i className="fas fa-cog"></i>,
-      },
-      {
-         title: "Tile 2",
-         description: "This is the description for Tile 2.",
-         icon: <i className="fas fa-chart-bar"></i>,
-      },
-      {
-         title: "Tile 3",
-         description: "This is the description for Tile 3.",
-         icon: <i className="fas fa-user"></i>,
-      },
-      {
-         title: "Tile 1",
-         description: "This is the description for Tile 1.",
-         icon: <i className="fas fa-cog"></i>,
-      },
-      {
-         title: "Tile 2",
-         description: "This is the description for Tile 2.",
-         icon: <i className="fas fa-chart-bar"></i>,
-      },
-      {
-         title: "Tile 3",
-         description: "This is the description for Tile 3.",
-         icon: <i className="fas fa-user"></i>,
-      },
-      {
-         title: "Tile 1",
-         description: "This is the description for Tile 1.",
-         icon: <i className="fas fa-cog"></i>,
-      },
-      {
-         title: "Tile 2",
-         description: "This is the description for Tile 2.",
-         icon: <i className="fas fa-chart-bar"></i>,
-      },
-      {
-         title: "Tile 3",
-         description: "This is the description for Tile 3.",
-         icon: <i className="fas fa-user"></i>,
-      },
-      {
-         title: "Tile 1",
-         description: "This is the description for Tile 1.",
-         icon: <i className="fas fa-cog"></i>,
-      },
-      {
-         title: "Tile 2",
-         description: "This is the description for Tile 2.",
-         icon: <i className="fas fa-chart-bar"></i>,
-      },
-      {
-         title: "Tile 3",
-         description: "This is the description for Tile 3.",
-         icon: <i className="fas fa-user"></i>,
-      },
-   ];
+export default function IndexPage() {
+   const [allEvents, setAllEvents] = useState([]);
+   useEffect(() => {
+      axios.get("/allevents").then((res) => {
+         setAllEvents(res.data);
+      });
+   }, []);
 
    return (
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
-         {tilesData.map((tile, index) => (
-            <Tile key={index} {...tile} />
-         ))}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-8 gap-x-6 gap-y-8 ">
+         {allEvents.length > 0 &&
+            allEvents.map((event) => (
+               <Link to={"/event/" + event._id} className="bg-gray-200 ">
+                  <div className="flex rounded-2xl mb-2 ">
+                     {event.photos?.[0] && (
+                        <img
+                           className="rounded-2xl object-cover aspect-square overflow-hidden "
+                           src={
+                              "http://localhost:4000/uploads/" +
+                              event.photos?.[0]
+                           }
+                           alt=""
+                        />
+                     )}
+                  </div>
+                  <h3 className="font-bold"> {event.address} </h3>
+                  <h2 className="text-sm text-gray-500">{event.title}</h2>
+                  <div className="mt-2">
+                     <span className="font-bold">
+                        Event Price - {event.price}
+                     </span>
+                  </div>
+               </Link>
+            ))}
       </div>
    );
-};
-
-const App = () => {
-   return (
-      <div>
-         <TilesSection />
-      </div>
-   );
-};
-
-export default App;
+}

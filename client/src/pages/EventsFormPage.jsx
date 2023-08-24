@@ -15,7 +15,9 @@ export default function EventsFormPage() {
    const [extraInfo, setExtraInfo] = useState("");
    const [startDate, setStartDate] = useState("");
    const [endDate, setEndDate] = useState("");
+   const [year, setYear] = useState(0);
    const [maxMembers, setMaxMembers] = useState(1);
+   const [price, setPrice] = useState(0);
    const [redirect, setRedirect] = useState(false);
 
    useEffect(() => {
@@ -32,7 +34,9 @@ export default function EventsFormPage() {
          setExtraInfo(data.extraInfo);
          setStartDate(data.startDate);
          setEndDate(data.endDate);
+         setYear(data.year);
          setMaxMembers(data.maxMembers);
+         setPrice(data.price);
       });
    }, [id]);
 
@@ -47,7 +51,9 @@ export default function EventsFormPage() {
          extraInfo,
          startDate,
          endDate,
+         year,
          maxMembers,
+         price,
       };
 
       if (id) {
@@ -74,6 +80,7 @@ export default function EventsFormPage() {
          <form onSubmit={saveEvent}>
             <h2 className="text-2xl mt-4 mb-2">Title</h2>
             <input
+               required
                type="text"
                value={title}
                onChange={(e) => setTitle(e.target.value)}
@@ -82,6 +89,7 @@ export default function EventsFormPage() {
 
             <h2 className="text-2xl mt-4 mb-2">Address</h2>
             <input
+               required
                type="text"
                value={address}
                onChange={(e) => setAddress(e.target.value)}
@@ -94,6 +102,7 @@ export default function EventsFormPage() {
             />
             <h2 className="text-2xl mt-12">Description</h2>
             <textarea
+               required
                className="border-2 mt-5"
                value={description}
                onChange={(e) => setDescription(e.target.value)}
@@ -106,15 +115,17 @@ export default function EventsFormPage() {
 
             <h2 className="text-2xl mt-4 ">Extra Info</h2>
             <textarea
+               required
                value={extraInfo}
                onChange={(e) => setExtraInfo(e.target.value)}
             />
 
             <h2 className="text-2xl mt-4">Start Date and End Date</h2>
-            <div className="grid sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4  gap-3">
                <div>
-                  <h3 className="mt-2 -mb-1">Start Date</h3>
+                  <h3 className="mt-2 -mb-1">Date</h3>
                   <input
+                     required
                      type="text"
                      value={startDate}
                      onChange={(e) => setStartDate(e.target.value)}
@@ -122,21 +133,42 @@ export default function EventsFormPage() {
                   />
                </div>
                <div>
-                  <h3 className="mt-2 -mb-1">End Date</h3>
+                  <h3 className="mt-2 -mb-1">Month</h3>
                   <input
+                     required
                      type="text"
                      value={endDate}
                      onChange={(e) => setEndDate(e.target.value)}
                      placeholder="25"
                   />
                </div>
+               <div>
+                  <h3 className="mt-2 -mb-1">Year</h3>
+                  <input
+                     required
+                     type="text"
+                     value={year}
+                     onChange={(e) => setYear(e.target.value)}
+                     placeholder="Ex : 2002"
+                  />
+               </div>
                <div className="ml-2">
                   <h3 className="mt-2 -mb-1">Maximum Team Members</h3>
                   <input
-                     className="h-8 mt-1.5  rounded-xl"
+                     required
+                     className="h-8 mt-1.5  rounded-xl border-2"
                      type="number"
                      value={maxMembers}
                      onChange={(e) => setMaxMembers(e.target.value)}
+                  />
+               </div>
+               <div className="ml-2">
+                  <h3 className="mt-2 -mb-1">Price</h3>
+                  <input
+                     className="h-8 mt-1.5  rounded-xl border-2"
+                     type="number"
+                     value={price}
+                     onChange={(e) => setPrice(e.target.value)}
                   />
                </div>
             </div>

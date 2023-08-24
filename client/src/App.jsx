@@ -11,6 +11,10 @@ import { useContext } from "react";
 import ProfilePage from "./pages/ProfilePage";
 import Events from "./pages/Events";
 import EventsFormPage from "./pages/EventsFormPage";
+import EventPage from "./pages/EventPage";
+import RegisterEvent from "./RegisterEvent";
+import RegisteredEvents from "./pages/RegisteredEvents";
+import SingleRegister from "./pages/SingleRegister";
 
 axios.defaults.baseURL = "http://localhost:4000";
 axios.defaults.withCredentials = true;
@@ -33,6 +37,15 @@ function App() {
                <Route
                   path="/account/myevents/:id"
                   element={<EventsFormPage />}
+               />
+               <Route path="/event/:id" element={<EventPage />} />
+               <Route
+                  path="/account/registrations"
+                  element={<RegisteredEvents />}
+               />
+               <Route
+                  path="/account/registrations/:id"
+                  element={<SingleRegister />}
                />
             </Route>
          </Routes>

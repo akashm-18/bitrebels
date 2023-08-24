@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const EventSchema = new mongoose.Schema({
-    owner : {type: mongoose.Schema.Types.ObjectId , ref :'User'} ,
+    owner : {type: mongoose.Schema.Types.ObjectId , ref :'User'} , 
     title:String,
     address : String , 
     photos : [String] , 
@@ -10,7 +10,9 @@ const EventSchema = new mongoose.Schema({
     extraInfo : String , 
     startDate : Number ,
     endDate : Number ,
-    maxMembers : Number
+    year : Number ,
+    maxMembers : Number ,
+    price : Number ,
 })
 
 const PlaceModel = mongoose.model('Event' , EventSchema);
