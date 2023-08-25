@@ -8,7 +8,7 @@ export default function RegisterEvent({ singleEvent }) {
    const [redirect, setRedirect] = useState("");
 
    async function registerthisEvent() {
-      const res = await axios.post("/registerEvent", {
+      const res = await axios.post("/registerevent", {
          event: singleEvent._id,
          name,
          phone,

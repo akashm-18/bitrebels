@@ -30,6 +30,8 @@ app.use(cors(
     }
 ))
 
+
+
  mongoose.connect(process.env.MONGO_URL)
 
 app.get('/test' , (req,res) => {
@@ -183,6 +185,22 @@ app.get('/allevents' , async (req,res) => {
 })
 
 
+
+function getUserDataFromToken(req) {
+    
+    return new Promise((resolve,reject) => {
+        jwt.verify(req.cookies.token, secrettoken, {}, async (err, userData) => {
+            if (err) throw err;
+            resolve(userData)
+        })
+    })
+}
+
+
+
+
+
+
 app.post('/registerevent' ,async (req,res) => {
     const userData = await getUserDataFromToken(req);
     const {event , date , month , year , name , phone , price } = req.body
@@ -197,14 +215,7 @@ app.post('/registerevent' ,async (req,res) => {
 })
 
 
-function getUserDataFromToken(req) {
-    return new Promise((resolve,reject) => {
-        jwt.verify(req.cookies.token, secrettoken, {}, async (err, userData) => {
-            if (err) throw err;
-            resolve(userData)
-        })
-    })
-}
+
 
 
 app.get('/registerevent' , async (req,res) => {

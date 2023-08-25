@@ -14,7 +14,7 @@ export default function IndexPage() {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-8 gap-x-6 gap-y-8 ">
          {allEvents.length > 0 &&
             allEvents.map((event) => (
-               <Link to={"/event/" + event._id} className="bg-gray-200 ">
+               <Link to={"/event/" + event._id} className="bg-gray-200">
                   <div className="flex rounded-2xl mb-2 ">
                      {event.photos?.[0] && (
                         <img
